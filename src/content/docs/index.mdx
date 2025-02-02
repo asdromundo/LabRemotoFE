@@ -1,10 +1,10 @@
 ---
-title: Welcome to Starlight
-description: Get started building your docs site with Starlight.
+title: "Laboratorio Remoto: Análisis de Sistemas y Señales"
+description: Laboratorio Remoto de la Facultad de Ingeniería, UNAM.
 template: splash
 hero:
   title: |
-    Welcome to Starlight with
+    Laboratorio Remoto: Análisis de Sistemas y Señales
     <span
       class="font-black text-transparent
         bg-clip-text bg-gradient-to-b
@@ -13,34 +13,34 @@ hero:
     >
       Tailwind
     </span>
-  tagline: Congrats on setting up a new Starlight project!
+  tagline: Facultad de Ingeniería, UNAM
   image:
-    file: ../../assets/houston.webp
+    file: ../../assets/cover.webp
   actions:
-    - text: Example Guide
-      link: /guides/example/
+    - text: Ingresar
+      link: /account/login
       icon: right-arrow
-    - text: Read the Starlight docs
-      link: https://starlight.astro.build
+    - text: Consulta la referencia
+      link: /practicas/
       icon: external
       variant: minimal
 ---
 
 import { Card, CardGrid } from '@astrojs/starlight/components';
 
-## Next steps
+## Uso
 
 <CardGrid stagger>
-	<Card title="Update content" icon="pencil">
-		Edit `src/content/docs/index.mdx` to see this page change.
+	<Card title="Inicia sesión" icon="laptop">
+		Sí no tienes cuenta, debes solicitar el acceso al profesor.
 	</Card>
-	<Card title="Add new content" icon="add-document">
-		Add Markdown or MDX files to `src/content/docs` to create new pages.
+	<Card title="Reserva un horario" icon="list-format">
+		Solo podrás acceder a las prácticas durante el horario establecido.
 	</Card>
-	<Card title="Configure your site" icon="setting">
-		Edit your `sidebar` and other config in `astro.config.mjs`.
+	<Card title="Ingresa en tu horario reservado" icon="rocket">
+		Podrás interactuar con el equipo, correr las prácticas y descargar los datos obtenidos.
 	</Card>
-	<Card title="Read the docs" icon="open-book">
-		Learn more in [the Starlight Docs](https://starlight.astro.build/).
+	<Card title="Actualiza tu cuenta" icon="setting">
+		Puedes cambiar tu correo y actualizar tus datos en [tu cuenta](/account/).
 	</Card>
 </CardGrid>

@@ -14,15 +14,15 @@ export default defineConfig({
       },
       sidebar: [
         {
-          label: "Guides",
+          label: "Configuración",
           items: [
             // Each item here is one entry in the navigation menu.
-            { label: "Example Guide", slug: "guides/example" },
+            { label: "Mi cuenta", slug: "account" },
           ],
         },
         {
-          label: "Reference",
-          autogenerate: { directory: "reference" },
+          label: "Prácticas",
+          autogenerate: { directory: "practicas" },
         },
       ],
       // Establece el español como el idioma predeterminado para este sitio.
