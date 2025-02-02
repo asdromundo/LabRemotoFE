@@ -17,7 +17,7 @@ export default defineConfig({
           label: "Configuración",
           items: [
             // Each item here is one entry in the navigation menu.
-            { label: "Mi cuenta", slug: "account" },
+            { label: "Usuarios", slug: "account" },
           ],
         },
         {
