@@ -3,6 +3,8 @@ import { defineConfig } from "astro/config";
 import starlight from "@astrojs/starlight";
 import tailwind from "@astrojs/tailwind";
 
+import svelte from "@astrojs/svelte";
+
 // https://astro.build/config
 export default defineConfig({
   site: "https://labremotomd.fi-p.unam.mx",
@@ -35,7 +37,11 @@ export default defineConfig({
         },
       },
       customCss: ["./src/tailwind.css"],
+      components: {
+        ThemeSelect: "./src/components/ThemeSelect.astro",
+      },
     }),
     tailwind({ applyBaseStyles: false }),
+    svelte(),
   ],
 });

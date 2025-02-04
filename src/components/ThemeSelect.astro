@@ -1,0 +1,8 @@
+---
+import type { Props } from "@astrojs/starlight/props";
+import Default from "@astrojs/starlight/components/ThemeSelect.astro";
+import LoginButton from "./LoginButton.svelte";
+---
+
+<LoginButton client:only="svelte" />
+<Default {...Astro.props}><slot /></Default>

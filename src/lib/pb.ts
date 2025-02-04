@@ -16,7 +16,7 @@ export function getUser() {
 // Iniciar sesión
 export async function login(email: string, password: string) {
   try {
-    return await pb.collection("users").authWithPassword(email, password);
+    return await pb.collection("usuarios").authWithPassword(email, password);
   } catch (error) {
     console.error("Error al iniciar sesión:", error);
     throw error;
