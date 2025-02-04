@@ -27,3 +27,20 @@ export async function login(email: string, password: string) {
 export function logout() {
   pb.authStore.clear();
 }
+
+export async function updateUser(userId: string, { name, email, password, oldPassword }: any) {
+  try {
+    const data = {
+      name,
+      email,
+      ...(password ? { password, passwordConfirm: password, oldPassword } : {})
+    };
+
+    const updatedUser = await pb.collection('usuarios').update(userId, data);
+
+    return updatedUser;
+  } catch (error) {
+    console.error("Error al actualizar el usuario:", error);
+    throw error;
+  }
+}
