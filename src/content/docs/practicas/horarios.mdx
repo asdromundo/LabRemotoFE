@@ -4,39 +4,8 @@ description: Reserva o consulta un horario para las prácticas.
 tableOfContent: false
 ---
 
+import Horarios from "../../../components/Horarios.svelte"
+
 Puedes reservar o consultar tus horarios para el uso del laboratorio remoto.
 
-<div class="max-w-4xl mx-auto p-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg">
-  <h1 class="text-2xl font-bold text-accent-600 dark:text-accent-200 text-center mb-6">
-    Horarios de Prácticas
-  </h1>
-
-  <div class="mb-6 p-4 bg-gray-100 dark:bg-gray-700 rounded-lg">
-    <p class="text-gray-700 dark:text-gray-300">
-      <strong class="text-accent-600 dark:text-accent-200">Reserva activa:</strong> 
-      Martes 6 de Febrero, 14:00 - 15:30
-    </p>
-  </div>
-
-  <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
-    {["08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
-      "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30",
-      "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:30"]
-      .map(time => (
-        <div
-          class={`p-3 rounded-lg text-center font-semibold 
-                  ${time >= "14:00" && time < "15:30" ? "bg-accent-600 text-white" : 
-                    "bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-300"}`
-          }
-        >
-          {time}
-        </div>
-      ))
-    }
-  </div>
-
-  <div class="mt-6 flex items-center justify-center gap-4">
-    <div class="w-4 h-4 bg-accent-600 rounded"></div>
-    <span class="text-sm text-gray-700 dark:text-gray-300">Tu reserva</span>
-  </div>
-</div>
+<Horarios client:only="svelte" />

@@ -1,13 +1,21 @@
 <script>
-  import { isAuthenticated, getUser, updateUser, logout } from "../lib/pb";
+  import {
+    isAuthenticated,
+    getUser,
+    updateUser,
+    logout,
+    requestEmailChange,
+  } from "../lib/pb";
   import LoginButton from "./LoginButton.svelte";
   import { onMount } from "svelte";
   import { slide } from "svelte/transition";
 
   let modifyPassword = $state(false);
+  let modifiedEmail = $state("");
 
   let user = $state({
     name: "",
+    account: "",
     username: "",
     email: "",
     oldPassword: "",
@@ -16,13 +24,31 @@
   });
 
   onMount(async () => {
-    if (isAuthenticated()) {
+    if (getUser()) {
       user = await getUser();
     }
   });
 
+  async function handleEmailChange(event) {
+    event.preventDefault();
+
+    if (modifiedEmail) {
+      requestEmailChange(modifiedEmail);
+    }
+  }
+
   async function handleUpdate(event) {
     event.preventDefault();
+
+    if (!isAuthenticated()) {
+      alert(
+        "Sesión invalida, no se realizarán cambios. Vuelva a iniciar sesión"
+      );
+      await logout();
+      window.location.reload();
+      return;
+    }
+
     if (user.password && user.password !== user.confirmPassword) {
       alert("Las contraseñas no coinciden.");
       return;
@@ -50,9 +76,9 @@
   }
 </script>
 
-{#if isAuthenticated()}
+{#if getUser()}
   <div
-    class="max-w-2xl mx-auto p-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg"
+    class="max-w-2xl mx-auto mt-4 p-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg"
   >
     <form onsubmit={handleUpdate}>
       <div class="mb-6 space-y-4">
@@ -83,7 +109,7 @@
           <input
             id="username"
             type="text"
-            bind:value={user.id}
+            bind:value={user.account}
             disabled
             class="w-full p-3 border rounded-lg bg-gray-300 dark:bg-gray-600 text-gray-500 dark:text-gray-400 cursor-not-allowed"
             required
@@ -102,8 +128,8 @@
             type="email"
             bind:value={user.email}
             placeholder="correo@ejemplo.com"
-            class="w-full p-3 border rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white
-                     focus:outline-none focus:ring-2 focus:ring-accent-600"
+            class="w-full p-3 border rounded-lg bg-gray-300 dark:bg-gray-600 text-gray-500 dark:text-gray-400 cursor-not-allowed"
+            disabled
             required
           />
         </div>
@@ -142,7 +168,7 @@
       {#if modifyPassword}<div transition:slide>
           <label
             for="password"
-            class="block mt-4 text-sm font-medium text-gray-700 dark:text-gray-300"
+            class="block text-sm font-medium text-gray-700 dark:text-gray-300"
           >
             Nueva contraseña
           </label>
@@ -158,7 +184,7 @@
 
           <label
             for="confirmPassword"
-            class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+            class="block mt-4 text-sm font-medium text-gray-700 dark:text-gray-300"
           >
             Confirmar contraseña
           </label>
@@ -182,6 +208,34 @@
       </button>
     </form>
   </div>
+  <!-- No funcional hasta que tengamos servidor de correo SMTP
+      <form onsubmit={handleEmailChange}>
+      <div>
+        <label
+          for="email"
+          class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+        >
+          Solicitar cambio de correo. Deberás confirmar con el enlace enviado al
+          correo proporcionado
+        </label>
+        <input
+          placeholder="nuevo@correo.com"
+          id="email"
+          type="email"
+          bind:value={modifiedEmail}
+          class="w-1/2 p-3 border rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white
+                     focus:outline-none focus:ring-2 focus:ring-accent-600"
+          required
+        />
+        <button
+          type="submit"
+          class="sm:mx-auto md:ml-16 mt-6 p-3 bg-accent-600 text-white font-bold rounded-lg hover:bg-accent-900 transition"
+        >
+          Solicitar cambio de correo
+        </button>
+      </div>
+    </form>
+   -->
 {:else}
   <h3 class="text-center">
     Debes iniciar sesión para ver los datos de tu cuenta
