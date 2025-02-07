@@ -161,3 +161,29 @@ export async function createUser(user: User) {
   }
   return await pb.collection('users').create(data);
 }
+
+export async function isInReservationTime() {
+  if (!isLoggedIn()) {
+    return false
+  }
+
+  const now = new Date()
+  let limite = new Date()
+  limite.setMinutes(now.getMinutes() - 29)
+  try {
+    const record = await pb.collection('reservations').getFirstListItem(`user="${getUser()?.id}"`, {
+      filter: `date>"${limite.toISOString().replace("T", " ")}"`,
+      sort: "-date"
+    });
+    limite = new Date(record.date)
+    limite.setMinutes(limite.getMinutes() + 30)
+    if (new Date(record.date) <= now && now < limite) {
+      return true
+    }
+
+  } catch (error) {
+    return false
+  }
+
+  return false
+}

@@ -7,6 +7,7 @@
     removeReservation,
     createReservation,
     updateReservation,
+    isInReservationTime,
   } from "../lib/pb";
   import { ClientResponseError } from "pocketbase";
 
@@ -22,6 +23,7 @@
     return "";
   });
 
+  let tieneReserva: boolean = $state(false);
   let reservations: Date[] = [];
   let nextReservation: Date | null = $state(null);
   let loading = $state(true);
@@ -37,7 +39,8 @@
     return `${hour.toString().padStart(2, "0")}:${minute.toString().padStart(2, "0")}`;
   });
 
-  onMount(() => {
+  onMount(async () => {
+    tieneReserva = await isInReservationTime();
     const fetchData = async () => {
       loading = true;
       try {
@@ -112,7 +115,10 @@
     <div
       class="flex place-content-center p-4 bg-gray-100 dark:bg-gray-700 rounded-lg"
     >
-      {#if nextReservation}
+      {#if tieneReserva}
+        <p>Reserva activa, visita la página:</p>
+        <a href="/practicas/laboratorio/"> Laboratorio</a>
+      {:else if nextReservation}
         <div></div>
         <p class="text-gray-700 dark:text-gray-300">
           <strong class="text-accent-600 dark:text-accent-200"
