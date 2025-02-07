@@ -1,11 +1,26 @@
 // src/lib/pocketbase.ts
-import PocketBase from "pocketbase";
+import PocketBase, { type RecordModel } from "pocketbase";
 
 const pb = new PocketBase(import.meta.env.PUBLIC_POCKETBASE_URL);
+
+const AUTH_TIMEOUT = 3600 // Segundos que te mantiene autenticado
 
 // Verificar si el usuario está autenticado
 export function isAuthenticated() {
   return pb.authStore.isValid;
+}
+
+
+export function isLoggedIn() {
+  let lastLogin = localStorage.getItem("Last Login")
+  if (lastLogin) {
+    const now = new Date()
+    if (Number(lastLogin) + (AUTH_TIMEOUT * 1000) >= now.valueOf()) {
+      return true
+    }
+    logout()
+  }
+  return false
 }
 
 // Obtener usuario actual
@@ -16,15 +31,18 @@ export function getUser() {
 // Iniciar sesión
 export async function login(email: string, password: string) {
   try {
+    localStorage.setItem("Last Login", `${new Date().valueOf()}`)
     return await pb.collection("users").authWithPassword(email, password);
   } catch (error) {
     console.error("Error al iniciar sesión:", error);
+    localStorage.removeItem("Last Login")
     throw error;
   }
 }
 
 // Cerrar sesión
 export function logout() {
+  localStorage.removeItem("Last Login")
   pb.authStore.clear();
 }
 
@@ -91,4 +109,55 @@ export async function updateReservation(reservationId: string, date: string) {
     "date": date
   };
   return await pb.collection('reservations').update(reservationId, data);
+}
+
+export type User = {
+  id: string,
+  num_cuenta: string,
+  email: string,
+  nombre: string,
+  rol: string,
+  password?: string
+}
+
+export function recordToUser(record: RecordModel): User {
+  return {
+    id: record.id,
+    num_cuenta: record.account,
+    email: record.email,
+    nombre: record.name,
+    rol: record.role
+  }
+}
+
+export async function findUser(search: string) {
+  const records = await pb.collection('users').getFullList({
+    filter: `(name~'${search}' || account~'${search}' || email~'${search}')`
+  }
+  )
+  return records.map((r) => recordToUser(r))
+}
+
+export async function listUsers() {
+  const records = await pb.collection('users').getFullList({
+    sort: '-name',
+  });
+  return records.map((r) => recordToUser(r))
+}
+
+export async function deleteUser(userId: string) {
+  return await pb.collection('users').delete(userId);
+}
+
+export async function createUser(user: User) {
+  const data = {
+    password: user.password,
+    passwordConfirm: user.password,
+    email: user.email,
+    emailVisibility: true,
+    name: user.nombre,
+    role: user.rol,
+    account: user.num_cuenta
+  }
+  return await pb.collection('users').create(data);
 }
